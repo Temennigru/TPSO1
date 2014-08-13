@@ -20,9 +20,9 @@ private:
     std::priority_queue<Thread, std::deque, Thread_Greater> m_thread_queue;
     
 public:
-    Scheduler();
-    void push (Thread);
-    Thread pop ();
+    Scheduler() {}
+    void push (Thread&);
+    Thread& pop ();
     
 };
 
