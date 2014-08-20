@@ -15,8 +15,6 @@
 #include <ucontext.h>
 #include <functional>
 
-struct Thread_Greater;
-
 class Thread {
 private:
     ucontext_t m_context;
@@ -38,9 +36,10 @@ public:
     friend class Scheduler;
 };
 
+typedef Thread* ThreadPtr;
 
-struct Thread_Greater : public std::binary_function <Thread*,Thread*,bool> {
-    bool operator() (const Thread* x, const Thread* y) const {return x->m_priority>y->m_priority;}
+struct Thread_Greater : public std::binary_function <ThreadPtr,ThreadPtr,bool> {
+    bool operator() (const ThreadPtr& x, const ThreadPtr& y) const {return x->m_priority>y->m_priority;}
 };
 
 #endif
