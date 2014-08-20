@@ -9,6 +9,8 @@
 #ifndef TPSO1_thread_h
 #define TPSO1_thread_h
 
+#define _XOPEN_SOURCE
+
 #include <ucontext.h>
 
 struct Thread_Greater;

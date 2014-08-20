@@ -7,6 +7,7 @@
 //
 
 #include "scheduler.h"
+#include <assert.h>
 
 
 
@@ -16,7 +17,7 @@ void Scheduler::push (Thread& t) {
     else { t.m_priority--; }
     
     
-    this->m_thread_queue.push_back(t);
+    this->m_thread_queue.push(t);
     
 }
 
@@ -25,7 +26,7 @@ Thread& Scheduler::pop () {
     assert(!this->m_thread_queue.empty() );
     
     
-    Thread& t = this->m_thread_queue.front();
+    Thread& t = this->m_thread_queue.top();
     this->m_thread_queue.pop();
     
     return t;
