@@ -18,19 +18,16 @@
 class Thread {
 private:
     ucontext_t m_context;
-    void(*m_callback)();
+    void(*m_callback)(int);
     int m_param;
     int m_init_priority;
     int m_priority;
     
 public:
-    Thread(void(*callback)(), int param, int priority = 0);
+    Thread(void(*callback)(int), int param, int priority = 1);
     void exec();
     void save();
     void restore();
-    void reset_priority();
-    
-    
     
     friend struct Thread_Greater;
     friend class Scheduler;
