@@ -9,11 +9,9 @@
 #ifndef TPSO1_thread_h
 #define TPSO1_thread_h
 
-#include <cucontext>
+#include <ucontext.h>
 
-struct Thread_Greater : binary_function <Thread,Thread,bool> {
-    bool operator() (const Thread& x, const Thread& y) const {return x.m_priority>y.m_priority;}
-};
+struct Thread_Greater;
 
 class Thread {
 private:
@@ -32,11 +30,13 @@ public:
     
     
     
-    friend Thread_Greater::operator()(const Thread&, const Thread&);
+    friend struct Thread_Greater;
     friend class Scheduler;
 };
 
 
-
+struct Thread_Greater : std::binary_function <Thread,Thread,bool> {
+    bool operator() (const Thread& x, const Thread& y) const {return x.m_priority>y.m_priority;}
+};
 
 #endif
