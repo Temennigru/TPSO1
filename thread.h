@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 GrupoSO. All rights reserved.
 //
 
+
 #ifndef TPSO1_thread_h
 #define TPSO1_thread_h
 
-#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE
-#endif
 
 #include <ucontext.h>
+#include <functional>
 
 struct Thread_Greater;
 
@@ -39,8 +39,8 @@ public:
 };
 
 
-struct Thread_Greater : std::binary_function <Thread,Thread,bool> {
-    bool operator() (const Thread& x, const Thread& y) const {return x.m_priority>y.m_priority;}
+struct Thread_Greater : public std::binary_function <Thread*,Thread*,bool> {
+    bool operator() (const Thread* x, const Thread* y) const {return x->m_priority>y->m_priority;}
 };
 
 #endif

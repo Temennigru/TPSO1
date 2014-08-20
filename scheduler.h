@@ -17,12 +17,12 @@ private:
     // thread_queue is a heap. The idea is to always execute the thread with the highest
     // priority, decrement its priority and reinsert it into the heap. When the priority
     // reaches 0, it is reset to the initial priority.
-    std::priority_queue<Thread&, std::deque<Thread&>, Thread_Greater> m_thread_queue;
+    std::priority_queue<Thread*, std::deque<Thread*>, Thread_Greater> m_thread_queue;
     
 public:
     Scheduler() {}
-    void push (Thread&);
-    Thread& pop ();
+    void push (Thread*);
+    Thread* pop ();
     
 };
 
