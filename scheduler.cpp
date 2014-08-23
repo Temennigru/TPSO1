@@ -8,10 +8,21 @@
 
 #include "scheduler.h"
 #include <assert.h>
+#include <sys/time.h>
 
+__Internal_Scheduler__* __main_scheduler__ = NULL;
 
+Scheduler::Scheduler() {
+    if (__main_scheduler__ == NULL) {
+        __main_scheduler__ = new __Internal_Scheduler__();
+    }
+}
 
-void Scheduler::push (Thread* t) {
+void __Internal_Scheduler__::HandleAlarm(int signal) {
+    swapcontext(&this->current_thread->m_context, &this->main_context);
+}
+
+void __Internal_Scheduler__::push (Thread* t) {
     
     if (t->m_priority == 0) { t->m_priority = t->m_init_priority; }
     else { t->m_priority--; }
@@ -21,7 +32,7 @@ void Scheduler::push (Thread* t) {
     
 }
 
-Thread* Scheduler::pop () {
+Thread* __Internal_Scheduler__::pop () {
 
     assert(!this->m_thread_queue.empty() );
     
@@ -33,3 +44,16 @@ Thread* Scheduler::pop () {
     
 }
 
+
+void __Internal_Scheduler__::SchedulerMain() {
+    
+    struct itimerval it;
+    /*
+    .uc_link = &uc[0];
+    .uc_stack.ss_sp = st1;
+    .uc_stack.ss_size = sizeof st1;
+    makecontext (&uc[1], (void (*) (void)) f, 1, 1);
+    */
+    
+    
+}

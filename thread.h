@@ -14,14 +14,19 @@
 
 #include <ucontext.h>
 #include <functional>
+#include <signal.h>
 
 class Thread {
 private:
+    
+    typedef unsigned char* Stack;
+    
     ucontext_t m_context;
     void(*m_callback)(int);
     int m_param;
     int m_init_priority;
     int m_priority;
+    Stack stack;
     
 public:
     Thread(void(*callback)(int), int param, int priority = 1);
@@ -30,7 +35,7 @@ public:
     void restore();
     
     friend struct Thread_Greater;
-    friend class Scheduler;
+    friend class __Internal_Scheduler__;
 };
 
 typedef Thread* ThreadPtr;

@@ -13,20 +13,32 @@
 #include "thread.h"
 
 class Scheduler {
+public:
+    Scheduler();
+};
+
+class __Internal_Scheduler__ {
 private:
     // thread_queue is a heap. The idea is to always execute the thread with the highest
     // priority, decrement its priority and reinsert it into the heap. When the priority
     // reaches 0, it is reset to the initial priority.
     std::priority_queue<Thread*, std::deque<Thread*>, Thread_Greater> m_thread_queue;
+    ThreadPtr current_thread;
     
-public:
-    Scheduler() {}
     void push (Thread*);
-    Thread* pop ();
+    Thread* pop();
+    void HandleAlarm(int signal);
+    __Internal_Scheduler__();
+
+    
+public:    void SchedulerMain();
+    ucontext_t main_context;
+    
+    friend class Scheduler;
     
 };
 
-
+extern __Internal_Scheduler__* __main_scheduler__; // Singleton scheduler
 
 
 

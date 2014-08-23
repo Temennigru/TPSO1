@@ -7,7 +7,7 @@
 //
 
 #include "thread.h"
-
+#include <cstdlib>
 
 Thread::Thread(void(*callback)(int), int param, int priority) {
 
@@ -15,9 +15,17 @@ Thread::Thread(void(*callback)(int), int param, int priority) {
     this->m_param = param;
     this->m_init_priority = priority;
     this->m_priority = priority;
+    this->stack = (Stack) malloc (2097152);
     
 }
 
-void Thread::exec() { this->m_callback(this->m_param); }
+/* TODO:
+ * Fix circular dependency in Thread::exec
+ */
+
+void Thread::exec() {
+    signal (SIGALRM, __main_scheduler__::HandleAlarm);
+    swapcontext(__main_scheduler__::main_context, this->m_context);
+}
 void Thread::save() { getcontext(&this->m_context); }
 void Thread::restore() { setcontext(&this->m_context); }
