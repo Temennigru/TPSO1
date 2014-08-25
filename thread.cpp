@@ -24,8 +24,6 @@ Thread::Thread(void(*callback)(int), int param, int priority) : main_context(*__
  * Fix restore() not saving current context.
  */
 
-void Thread::exec() {
-    swapcontext(&this->main_context, &this->m_context);
-}
+void Thread::exec() { swapcontext(&this->main_context, &this->m_context); }
 void Thread::save() { getcontext(&this->m_context); }
 void Thread::restore() { setcontext(&this->m_context); }
