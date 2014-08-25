@@ -12,11 +12,6 @@
 #include <queue>
 #include "thread.h"
 
-class Scheduler {
-public:
-    Scheduler();
-};
-
 class __Internal_Scheduler__ {
 private:
     // thread_queue is a heap. The idea is to always execute the thread with the highest
@@ -36,6 +31,13 @@ public:    void SchedulerMain();
     
     friend class Scheduler;
     
+};
+
+
+class Scheduler {
+public:
+    __Internal_Scheduler__* main_scheduler;
+    Scheduler();
 };
 
 extern __Internal_Scheduler__* __main_scheduler__; // Singleton scheduler

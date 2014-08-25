@@ -11,11 +11,17 @@
 #include <sys/time.h>
 
 __Internal_Scheduler__* __main_scheduler__ = NULL;
+ucontext_t* __main_context__ = NULL;
 
 Scheduler::Scheduler() {
     if (__main_scheduler__ == NULL) {
         __main_scheduler__ = new __Internal_Scheduler__();
     }
+    this->main_scheduler = __main_scheduler__;
+}
+
+__Internal_Scheduler__::__Internal_Scheduler__() {
+    __main_context__ = &(this->main_context);
 }
 
 void __Internal_Scheduler__::HandleAlarm(int signal) {

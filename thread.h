@@ -16,12 +16,15 @@
 #include <functional>
 #include <signal.h>
 
+extern ucontext_t* __main_context__;
+
 class Thread {
 private:
     
     typedef unsigned char* Stack;
     
     ucontext_t m_context;
+    ucontext_t& main_context;
     void(*m_callback)(int);
     int m_param;
     int m_init_priority;

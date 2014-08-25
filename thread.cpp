@@ -9,7 +9,7 @@
 #include "thread.h"
 #include <cstdlib>
 
-Thread::Thread(void(*callback)(int), int param, int priority) {
+Thread::Thread(void(*callback)(int), int param, int priority) : main_context(*__main_context__) {
 
     this->m_callback = callback;
     this->m_param = param;
@@ -20,12 +20,12 @@ Thread::Thread(void(*callback)(int), int param, int priority) {
 }
 
 /* TODO:
- * Fix circular dependency in Thread::exec
+ * Make scheduler set alarm before running exec.
+ * Fix restore() not saving current context.
  */
 
 void Thread::exec() {
-    signal (SIGALRM, __main_scheduler__::HandleAlarm);
-    swapcontext(__main_scheduler__::main_context, this->m_context);
+    swapcontext(&this->main_context, &this->m_context);
 }
 void Thread::save() { getcontext(&this->m_context); }
 void Thread::restore() { setcontext(&this->m_context); }
