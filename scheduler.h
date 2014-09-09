@@ -27,7 +27,9 @@ private:
     __Internal_Scheduler__();
 
     
-public:    void SchedulerMain();
+public:
+    void SchedulerMain();
+    void new_thread(void (*func)(int));
     ucontext_t main_context;
     
     friend class Scheduler;

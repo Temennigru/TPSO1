@@ -36,10 +36,10 @@ void __Internal_Scheduler__::push (Thread* t) {
         t->m_priority = t->m_init_priority;
         this->m_zero_priority.push_back(t);
     }
-    else { t->m_priority--; }
-    
-    
-    this->m_thread_queue.push(t);
+    else {
+        t->m_priority--;
+        this->m_thread_queue.push(t);
+    }
     
 }
 
