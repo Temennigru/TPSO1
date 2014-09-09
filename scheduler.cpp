@@ -30,7 +30,12 @@ void __Internal_Scheduler__::HandleAlarm(int signal) {
 
 void __Internal_Scheduler__::push (Thread* t) {
     
-    if (t->m_priority == 0) { t->m_priority = t->m_init_priority; }
+    // Processes with 0 priority do not run until all
+    // processes have finished running
+    if (t->m_priority == 0) {
+        t->m_priority = t->m_init_priority;
+        this->m_zero_priority.push_back(t);
+    }
     else { t->m_priority--; }
     
     
@@ -40,8 +45,16 @@ void __Internal_Scheduler__::push (Thread* t) {
 
 Thread* __Internal_Scheduler__::pop () {
 
-    assert(!this->m_thread_queue.empty() );
+    assert( !this->m_thread_queue.empty() && !this->m_zero_priority.empty() );
     
+    // All processes have finished running. Re-insert zero-priority
+    // processes into queue with max priority
+    if ( this->m_thread_queue.empty() ) {
+        while ( !this->m_zero_priority.empty() ) {
+            this->m_thread_queue.push(this->m_zero_priority.back());
+            this->m_zero_priority.pop_back();
+        }
+    }
     
     Thread* t = this->m_thread_queue.top();
     this->m_thread_queue.pop();
