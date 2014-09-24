@@ -9,7 +9,9 @@
 #ifndef TPSO1_scheduler_h
 #define TPSO1_scheduler_h
 
+#include <sys/time.h>
 #include <queue>
+#include <set>
 #include "thread.h"
 
 class __Internal_Scheduler__ {
@@ -20,16 +22,19 @@ private:
     std::vector<Thread*> m_zero_priority;
     std::priority_queue<Thread*, std::deque<Thread*>, Thread_Greater> m_thread_queue;
     ThreadPtr current_thread;
+    struct itimerval timer;
     
     void push (Thread*);
     Thread* pop();
     void HandleAlarm(int signal);
-    __Internal_Scheduler__();
+    __Internal_Scheduler__() {}
+    __Internal_Scheduler__(void (*callback)(), int param);
+    std::set<int> ids;
 
     
 public:
     void SchedulerMain();
-    void new_thread(void (*func)(int));
+    void NewThread(void (*func)(), int param);
     ucontext_t main_context;
     
     friend class Scheduler;

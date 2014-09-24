@@ -11,6 +11,7 @@
 #define TPSO1_thread_h
 
 #define _XOPEN_SOURCE
+#define STANDARD_STACK_SIZE 2097152
 
 #include <ucontext.h>
 #include <functional>
@@ -25,17 +26,19 @@ private:
     
     ucontext_t m_context;
     ucontext_t& main_context;
-    void(*m_callback)(int);
+    void(*m_callback)();
     int m_param;
     int m_init_priority;
     int m_priority;
     Stack stack;
     
 public:
-    Thread(void(*callback)(int), int param, int priority = 1);
+    Thread(void(*callback)(), int param, int threadId, int priority = 50);
     void exec();
     void save();
     void restore();
+
+    int m_id;
     
     friend struct Thread_Greater;
     friend class __Internal_Scheduler__;

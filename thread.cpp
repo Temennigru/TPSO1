@@ -7,23 +7,31 @@
 //
 
 #include "thread.h"
+#include "util.h"
 #include <cstdlib>
+#include <ucontext.h>
 
-Thread::Thread(void(*callback)(int), int param, int priority) : main_context(*__main_context__) {
+Thread::Thread(void(*callback)(), int param, int threadId, int priority) : main_context(*__main_context__) {
 
     this->m_callback = callback;
     this->m_param = param;
     this->m_init_priority = priority;
     this->m_priority = priority;
-    this->stack = (Stack) malloc (2097152);
-    
+    this->stack = (Stack) malloc (STANDARD_STACK_SIZE);
+    this->m_id = threadId;
+
+
+    this->m_context.uc_link = __main_context__;
+    this->m_context.uc_stack.ss_sp = this->stack;
+    this->m_context.uc_stack.ss_size = STANDARD_STACK_SIZE;
+    getcontext(&this->m_context);
+
+    makecontext(&this->m_context, this->m_callback(), 1, this->m_param);
 }
 
 /* TODO:
  * Make scheduler set alarm before running exec.
  * Fix restore() not saving current context.
  */
-
-void Thread::exec() { swapcontext(&this->main_context, &this->m_context); }
 void Thread::save() { getcontext(&this->m_context); }
-void Thread::restore() { setcontext(&this->m_context); }
+void Thread::restore() { swapcontext(&this->m_context, this->m_context.uc_link); }
