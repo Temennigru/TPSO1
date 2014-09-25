@@ -9,11 +9,17 @@
 #include "util.h"
 #include <sys/time.h>
 
-void alarm (unsigned int useconds) {
-    struct itimerval newTimer;
-    newTimer.it_interval.tv_usec = 0;
-    newTimer.it_interval.tv_sec = 0;
-    newTimer.it_value.tv_sec = 0;
-    newTimer.it_value.tv_usec = useconds;
-    setitimer (ITIMER_REAL, &newTimer, NULL);
+void alarm (int type, unsigned int useconds, itimerval& timer, bool repeat) {
+    timer.it_interval.tv_usec = repeat ? useconds : 0;
+    timer.it_interval.tv_sec = 0;
+    timer.it_value.tv_sec = 0;
+    timer.it_value.tv_usec = useconds;
+    setitimer (type, &timer, NULL);
+}
+
+void alarmDisable (itimerval& timer) {
+    timer.it_interval.tv_usec = 0;
+    timer.it_interval.tv_sec = 0;
+    timer.it_value.tv_sec = 0;
+    timer.it_value.tv_usec = 0;
 }

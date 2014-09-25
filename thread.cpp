@@ -25,13 +25,14 @@ Thread::Thread(void(*callback)(), int param, int threadId, int priority) : main_
     this->m_context.uc_stack.ss_sp = this->stack;
     this->m_context.uc_stack.ss_size = STANDARD_STACK_SIZE;
     getcontext(&this->m_context);
-
     makecontext(&this->m_context, this->m_callback(), 1, this->m_param);
 }
 
-/* TODO:
- * Make scheduler set alarm before running exec.
- * Fix restore() not saving current context.
- */
+Thread::~Thread() {
+    free(this->stack);
+}
+
+void MarkForDeath() { this->m_death = true; }
+
 void Thread::save() { getcontext(&this->m_context); }
-void Thread::restore() { swapcontext(&this->m_context, this->m_context.uc_link); }
+void Thread::restore() { setcontext(&this->m_context); }

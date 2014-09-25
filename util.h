@@ -9,10 +9,14 @@
 #ifndef __TPSO1__util__
 #define __TPSO1__util__
 
-#define RUNTIME 40
+#define RUNTIME 10
 
 #include <stdio.h>
+#include <sys/time.h>
 
-void alarm (unsigned int useconds);
+
+void alarm (int type, unsigned int useconds, itimerval& timer, bool repeat);
+void alarmDisable (itimerval& timer);
+
 
 #endif /* defined(__TPSO1__util__) */

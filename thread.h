@@ -30,13 +30,16 @@ private:
     int m_param;
     int m_init_priority;
     int m_priority;
+    int m_sleep;
+    bool m_death;
     Stack stack;
     
 public:
     Thread(void(*callback)(), int param, int threadId, int priority = 50);
-    void exec();
+    ~Thread();
     void save();
     void restore();
+    void MarkForDeath();
 
     int m_id;
     
